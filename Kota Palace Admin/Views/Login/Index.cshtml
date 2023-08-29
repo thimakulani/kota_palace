@@ -1,0 +1,57 @@
+﻿@model UserLogin
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-4">
+            <div class="my-4 p-3 bg-light">
+
+                <div>
+                    
+                    <form  action="" class="needs-validation form page-form" method="post">
+                        <h4><i class="fa fa-key"></i> User Login</h4>
+
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger animated shake"></div>
+                        
+                        <div class="input-group form-group">
+                            <input asp-for="Email" placeholder="Username Or Email" required="required" class="form-control" type="text" />
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="form-control-feedback fa fa-user"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="input-group form-group">
+                            <input asp-for="Password" placeholder="Password" required="required" class="form-control " type="password" />
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="form-control-feedback fa fa-key"></i></span>
+                            </div>
+                        </div>
+                        <div class="row clearfix mt-3 mb-3">
+                            <div class="col-6">
+                                <a class="text-danger"> Reset Password?</a>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary btn-block btn-md" type="submit">
+                                <i class="load-indicator">
+                                    <clip-loader :loading="loading" color="#fff" size="20px"></clip-loader>
+                                </i>
+                                Login <i class="fa fa-key"></i>
+                            </button>
+                        </div>
+                        <hr />
+
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

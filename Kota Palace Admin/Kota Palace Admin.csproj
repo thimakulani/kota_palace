@@ -1,0 +1,130 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Kota_Palace_Admin</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.rtl.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.rtl.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.rtl.min.css" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\css\bootstrap.rtl.min.css.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.esm.js" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.esm.js.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.js" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
+	  <Content Remove="C:\Users\SIGAUQUE_TK\.nuget\packages\bootstrap\5.3.0\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AspNetCoreCompatibility" Version="1.1.0" />
+		<PackageReference Include="bootstrap" Version="5.3.0" />
+		<PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
+		<PackageReference Include="Google.Apis.Firebasestorage.v1beta" Version="1.61.0.3056" />
+		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+		<PackageReference Include="Npgsql" Version="7.0.4" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+		<PackageReference Include="supabase-storage-csharp" Version="1.3.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.9">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\css\font\summernote.woff2" />
+	  <None Include="wwwroot\fonts\dripicons-v2.svg" />
+	  <None Include="wwwroot\fonts\fontawesome-webfont.svg" />
+	  <None Include="wwwroot\fonts\fontawesome-webfont.woff2" />
+	  <None Include="wwwroot\fonts\glyphicons-halflings-regular.svg" />
+	  <None Include="wwwroot\fonts\MaterialIcons-Regular.woff2" />
+	  <None Include="wwwroot\fonts\Simple-Line-Icons.svg" />
+	  <None Include="wwwroot\fonts\Simple-Line-Icons.woff2" />
+	  <None Include="wwwroot\fonts\summernote.woff2" />
+	  <None Include="wwwroot\js\bootstrap-4.3.1.min.js" />
+	  <None Include="wwwroot\js\bootstrap-editable.js" />
+	  <None Include="wwwroot\js\bootstrap-editable.min.js" />
+	  <None Include="wwwroot\js\chartjs-2.3.0.js" />
+	  <None Include="wwwroot\js\dropzone.min.js" />
+	  <None Include="wwwroot\js\flatpickr.min.js" />
+	  <None Include="wwwroot\js\ion.rangeSlider.min.js" />
+	  <None Include="wwwroot\js\jquery-3.3.1.min.js" />
+	  <None Include="wwwroot\js\jquery.blueimp.js" />
+	  <None Include="wwwroot\js\jquery.endless-scroll.js" />
+	  <None Include="wwwroot\js\jquery.mask.js" />
+	  <None Include="wwwroot\js\jquery.mask.min.js" />
+	  <None Include="wwwroot\js\jquery.smartwizard.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\arabic.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\chinese.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\french.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\german.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\hindi.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\italian.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\portuguese.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\russian.js" />
+	  <None Include="wwwroot\js\locale\flatpickr\spanish.js" />
+	  <None Include="wwwroot\js\moment.min.js" />
+	  <None Include="wwwroot\js\page-scripts.js" />
+	  <None Include="wwwroot\js\plugins-init.js" />
+	  <None Include="wwwroot\js\plugins.js" />
+	  <None Include="wwwroot\js\polyfill.min.js" />
+	  <None Include="wwwroot\js\popper-1.14.7.min.js" />
+	  <None Include="wwwroot\js\popper.js" />
+	  <None Include="wwwroot\js\selectize.min.js" />
+	  <None Include="wwwroot\js\summernote.min.js" />
+	</ItemGroup>
+
+</Project>

@@ -1,9 +1,9 @@
 ﻿using Kota_Palace_Admin.Data;
 using Kota_Palace_Admin.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,8 +13,8 @@ namespace Kota_Palace_Admin.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private UserManager<AppUsers> manager;
-        private SignInManager<AppUsers> signInManager;
+        private readonly UserManager<AppUsers> manager;
+        private readonly SignInManager<AppUsers> signInManager;
         private readonly AppDBContext _context;
 
 
@@ -79,7 +79,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpPost("signup")]
         public async Task<ActionResult> SignUp(UserSignUp signUp)
         {
-            AppUsers users = new AppUsers()
+            AppUsers users = new()
             {
                 Email = signUp.Email,
                 Firstname = signUp.Firstname,
@@ -200,6 +200,9 @@ namespace Kota_Palace_Admin.Controllers
 
 public class UserLogin
 {
+    public UserLogin()
+    {
+    }
     public string Email { get; set; }
     public string Password { get; set; }
 }
@@ -214,11 +217,17 @@ public class UserSignUp
 {
     [Key]
     public string Id { get; set; }
+    [DisplayName("EMAIL")]
     public string Email { get; set; }
+    [DisplayName("PASSWORD")]
     public string Password { get; set; }
+    [DisplayName("FIRST NAME")]
     public string Firstname { get; set; }
+    [DisplayName("LAST NAME")]
     public string Lastname { get; set; }
+    [DisplayName("PHONE NUMBER")]
     public string PhoneNumber { get; set; }
+    
     public string UserType { get; set; }
     public string Url { get; set; }
 }

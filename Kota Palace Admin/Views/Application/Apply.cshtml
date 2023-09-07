@@ -2,10 +2,11 @@
 
 @{
     ViewData["Title"] = "Apply";
-    Layout = "_Home";
+   
 }
 
-<hr />
+<section>
+
 
 <div class="card">
     <div class="card-header bg-primary text-white">
@@ -99,7 +100,7 @@
         </div>
     </form>
 </div>
-
+</section>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

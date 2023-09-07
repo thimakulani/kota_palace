@@ -1,18 +1,17 @@
 ﻿using Kota_Palace_Admin.Data;
 using Kota_Palace_Admin.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 namespace Kota_Palace_Admin.Controllers
 {
-    [Authorize]
+
     public class ApplicationController : Controller
     {
-        private SignInManager<AppUsers> signInManager;
-        private AppDBContext context;
-        private UserManager<AppUsers> manager;
+        private readonly SignInManager<AppUsers> signInManager;
+        private readonly AppDBContext context;
+        private readonly UserManager<AppUsers> manager;
         public ApplicationController(AppDBContext context, SignInManager<AppUsers> signInManager, UserManager<AppUsers> manager)
         {
             this.context = context;
@@ -28,13 +27,31 @@ namespace Kota_Palace_Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var appDBContext = context.Business.Include(b => b.Owner);
-            return View(await appDBContext.ToListAsync());
+            var data = context.Business.Include(b => b.Owner).Where(x => string.IsNullOrEmpty(x.Status));
+            return View(await data.ToListAsync());
+        }
+        public async Task<IActionResult> ActiveBusiness()
+        {
+            var data = context.Business.Include(b => b.Owner).Where(x => x.Status.ToUpper() == "ACTIVE");
+            return View(await data.ToListAsync());
         }
         // GET: ApplicationController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var data = context.Business.Include("Owner").Where(x => x.Id == id).FirstOrDefault();
+            return View(data);
+        }
+
+        public ActionResult Approve(int id)
+        {
+            var data = context.Business.Find(id);//Include("Owner").Where(x => x.Id == id).FirstOrDefault();
+            if (data != null)
+            {
+                data.Status = "Active";
+                context.Business.Update(data);
+                context.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
         public ActionResult Apply()
         {
@@ -51,14 +68,14 @@ namespace Kota_Palace_Admin.Controllers
                 if (_user == null)
                 {
                     var signUp = applicationViewModel.AppUsers;
-                    AppUsers user = new AppUsers()
+                    AppUsers user = new()
                     {
                         Email = signUp.Email,
                         Firstname = signUp.Firstname,
                         Lastname = signUp.Lastname,
                         PhoneNumber = signUp.PhoneNumber,
                         UserType = "OWNER",
-                        UserName = signUp.Email
+                        UserName = signUp.Email,
                     };
                     var results = await manager.CreateAsync(user, signUp.Password);
                     if (results.Succeeded)
@@ -85,6 +102,7 @@ namespace Kota_Palace_Admin.Controllers
         }
         private void AddBusiness(Business business)
         {
+
             context.Business.Add(business);
             context.SaveChanges();
         }
@@ -112,7 +130,7 @@ namespace Kota_Palace_Admin.Controllers
         // GET: ApplicationController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(id);
         }
 
         // POST: ApplicationController/Edit/5
@@ -133,7 +151,7 @@ namespace Kota_Palace_Admin.Controllers
         // GET: ApplicationController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(id);
         }
 
         // POST: ApplicationController/Delete/5

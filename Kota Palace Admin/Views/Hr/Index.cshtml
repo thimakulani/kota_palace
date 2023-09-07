@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Kota_Palace_Admin.Models.AppUsers>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+
+                EMPLOYEES
+            </div>
+            <a class="btn-sm btn-primary text-decoration-none" asp-controller="Hr" asp-action="Create"> CREATE</a>
+            
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            LAST NAME
+                        </th>
+                        <th>
+                            FIRST NAME
+                        </th>
+                    </tr>
+                </thead>
+
+                @if(Model != null)
+                {
+                    foreach (var items in Model)
+                    {
+                        <tbody>
+                            <tr style="text-transform: uppercase;">
+                                <td>
+                                    @items.Id
+                                </td>
+                                <td>
+                                    @items.Lastname
+                                </td>
+                                <td>
+                                    @items.Firstname
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                    
+                }
+            </table>
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

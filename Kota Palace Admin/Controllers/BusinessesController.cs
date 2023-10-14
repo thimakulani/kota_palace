@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Kota_Palace_Admin.Models;
 using Kota_Palace_Admin.Data;
+using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace Kota_Palace_Admin.Controllers
 {
@@ -12,10 +14,13 @@ namespace Kota_Palace_Admin.Controllers
     public class BusinessesController : ControllerBase
     {
         private readonly AppDBContext _context;
-
-        public BusinessesController(AppDBContext context)
+        private readonly SignInManager<AppUsers> signInManager;
+        private readonly UserManager<AppUsers> manager;
+        public BusinessesController(AppDBContext context, SignInManager<AppUsers> signInManager, UserManager<AppUsers> manager)
         {
             _context = context;
+            this.signInManager = signInManager;
+            this.manager = manager;
         }
 
         // GET: api/Businesses
@@ -42,11 +47,11 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("specific/{id}")]
         public ActionResult<Business> GetBusiness(string id)
         {
-            var business = _context.Business.Where(x => x.OwnerId == id).FirstOrDefault();
+            var business = _context.Business.Where(x => x.OwnerId == id).Include(x => x.Address).FirstOrDefault();
 
             if (business == null)
             {
-                return NotFound();
+                return NotFound("Not found");
             }
 
             return Ok(business);
@@ -83,25 +88,92 @@ namespace Kota_Palace_Admin.Controllers
             return NoContent();
         }
 
+        // PUT: api/Businesses/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("address")]
+        public IActionResult PostAddress(Address address)
+        {
+            //var result = _context.Business.Where(x => x.OwnerId == business.OwnerId).FirstOrDefault();
+            if (address != null)
+            {
+                _context.Addresses.Add(address);
+                _context.SaveChanges();
+                return Ok();
+            }
+            return BadRequest("Something went wrong adding address");
+        }
+        [HttpGet("test")]
+        public ActionResult<ApplicationViewModel> Test()
+        {
+            UserSignUp userSignUp = new()
+            {
+                Email = "",
+                Firstname = "",
+                Lastname = "",
+                Id = "",
+                Password = "",
+                PhoneNumber = ""
+            };
+            Business business = new()
+            {
+                Name = "",
+                PhoneNumber = "",
+                Description = "",
+
+            };
+            return Ok(new ApplicationViewModel() { AppUsers = userSignUp, Business = business });
+        }
+
         // POST: api/Businesses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("register")]
-        public async Task<ActionResult<Business>> PostBusiness(Business business)
+        public async Task<ActionResult<ApplicationViewModel>> PostBusiness(ApplicationViewModel applicationViewModel)
         {
-            var result = _context.Business.Where(x => x.OwnerId == business.OwnerId).FirstOrDefault();
-            if (result == null)
+            var business = applicationViewModel.Business;
+            var _user = await signInManager.UserManager.FindByEmailAsync(applicationViewModel.AppUsers.Email);
+            if (_user == null)
             {
-                _context.Business.Add(business);
-                await _context.SaveChangesAsync();
+                var signUp = applicationViewModel.AppUsers;
+                AppUsers user = new()
+                {
+                    Email = signUp.Email,
+                    Firstname = signUp.Firstname,
+                    Lastname = signUp.Lastname,
+                    PhoneNumber = signUp.PhoneNumber,
+                    UserType = "OWNER",
+                    UserName = signUp.Email,
+                };
+                var results = await manager.CreateAsync(user, signUp.Password);
+                if (results.Succeeded)
+                {
+                    var user_data = await signInManager.UserManager.FindByEmailAsync(applicationViewModel.AppUsers.Email);
+                    business.OwnerId = user_data.Id;
+                    AddBusiness(business);
+                }
+                else
+                {
+                    string errors = "";
+                    foreach (var item in results.Errors)
+                    {
+                        //ModelState.AddModelError(item.Code, item.Description);
+                        errors += item.Description;
+                    }
+                    return NotFound(errors);
+                }
             }
             else
             {
-                //
-                _context.Business.Update(business);
-                await _context.SaveChangesAsync();
+                business.OwnerId = _user.Id;
+                AddBusiness(business);
             }
 
-            return Ok(business);
+            return Ok("Your business hass been successfully created");
+        }
+
+        private void AddBusiness(Business business)
+        {
+            _context.Business.Add(business);
+            _context.SaveChanges();
         }
 
         // DELETE: api/Businesses/5
@@ -135,9 +207,9 @@ namespace Kota_Palace_Admin.Controllers
             return _context.Business.Any(e => e.Id == id);
         }
     }
-}
-public class BusinessMenuViewModel
-{
-    public Business Business { get; set; }
-    public List<Menu> Menu { get; set; }
+    public class BusinessMenuViewModel
+    {
+        public Business Business { get; set; }
+        public List<Menu> Menu { get; set; }
+    }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+
 namespace Kota_Palace_Admin.Controllers
 {
 
@@ -60,10 +62,11 @@ namespace Kota_Palace_Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> Apply(ApplicationViewModel applicationViewModel)
         {
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(applicationViewModel);
+            Debug.WriteLine(json);
             if (ModelState.IsValid)
             {
                 var business = applicationViewModel.Business;
-
                 var _user = await signInManager.UserManager.FindByEmailAsync(applicationViewModel.AppUsers.Email);
                 if (_user == null)
                 {
@@ -98,6 +101,7 @@ namespace Kota_Palace_Admin.Controllers
                     AddBusiness(business);
                 }
             }
+
             return View(applicationViewModel);
         }
         private void AddBusiness(Business business)

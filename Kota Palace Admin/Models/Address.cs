@@ -12,6 +12,5 @@ namespace Kota_Palace_Admin.Models
         public double Longitude { get; set; }
         [ForeignKey(nameof(Business))]
         public int BusinessId { get; set; }
-        public Business Business { get; set; }
     }
 }

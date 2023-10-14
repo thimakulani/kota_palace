@@ -16,13 +16,15 @@ namespace Kota_Palace_Admin.Controllers
         private readonly UserManager<AppUsers> manager;
         private readonly SignInManager<AppUsers> signInManager;
         private readonly AppDBContext _context;
+        private readonly RoleManager<IdentityRole> roleManager;
 
 
-        public AccountController(UserManager<AppUsers> manager, SignInManager<AppUsers> signInManager, AppDBContext context)
+        public AccountController(UserManager<AppUsers> manager, SignInManager<AppUsers> signInManager, AppDBContext context, RoleManager<IdentityRole> roleManager)
         {
             this.manager = manager;
             this.signInManager = signInManager;
             _context = context;
+            this.roleManager = roleManager;
         }
 
         [HttpPost("login")]
@@ -48,9 +50,43 @@ namespace Kota_Palace_Admin.Controllers
             }
         }
 
+        [HttpPost("business/login")]
+        public async Task<ActionResult<AppUsers>> BusinessLogin(UserLogin login)
+        {
+            var results = await signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
+
+            if (results.Succeeded)
+            {
+                var user = await manager.FindByEmailAsync(login.Email);
+                
+                if (user != null)
+                {
+                    if (await manager.IsInRoleAsync(user, "Owner") || await manager.IsInRoleAsync(user, "Employee"))
+                    {
+                        return Ok(user);
+                    }
+                    else
+                    {
+                        return Unauthorized("Not Authorized To Use This App");
+                    }
+                    
+                }
+                else
+                {
+                    return NotFound("User not found");
+                }
+            }
+            else
+            {
+                return NotFound("Incorrect usrname or password");
+            }
+        }
+
+
+
         //update order status to in-progress
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> PutUpdateUser(string id, AppUsers users)
+        public async Task<IActionResult> PutUpdateUser(string id, UserSignUp user)
         {
             var u = await _context.AppUsers.FindAsync(id);
 
@@ -58,8 +94,10 @@ namespace Kota_Palace_Admin.Controllers
             {
                 return NotFound("User not found!");
             }
-
-            _context.Entry(users).State = EntityState.Modified;
+            u.Firstname = user.Firstname;
+            u.Lastname = user.Lastname;
+            u.PhoneNumber = user.PhoneNumber;
+            _context.Entry(u).State = EntityState.Modified;
 
             try
             {
@@ -85,7 +123,7 @@ namespace Kota_Palace_Admin.Controllers
                 Firstname = signUp.Firstname,
                 Lastname = signUp.Lastname,
                 PhoneNumber = signUp.PhoneNumber,
-                UserType = "CUSTOMER",
+                //UserType = "CUSTOMER",
                 UserName = signUp.Email
             };
 
@@ -93,6 +131,8 @@ namespace Kota_Palace_Admin.Controllers
 
             if (results.Succeeded)
             {
+                var user = await manager.FindByEmailAsync(signUp.Email);
+                await manager.AddToRoleAsync(user, "Customer");
                 return Ok(users.Id);
             }
             else
@@ -195,39 +235,39 @@ namespace Kota_Palace_Admin.Controllers
         }
 
     }
-
-}
-
-public class UserLogin
-{
-    public UserLogin()
+    public class UserLogin
     {
+        public UserLogin()
+        {
+        }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
-    public string Email { get; set; }
-    public string Password { get; set; }
+
+    public class UpdateUser
+    {
+        public string Id { get; set; }
+        public string Url { get; set; }
+    }
+    [NotMapped]
+    public class UserSignUp
+    {
+        [Key]
+        public string Id { get; set; }
+        [DisplayName("EMAIL")]
+        public string Email { get; set; }
+        [DisplayName("PASSWORD")]
+        public string Password { get; set; }
+        [DisplayName("FIRST NAME")]
+        public string Firstname { get; set; }
+        [DisplayName("LAST NAME")]
+        public string Lastname { get; set; }
+        [DisplayName("PHONE NUMBER")]
+        public string PhoneNumber { get; set; }
+
+        public string UserType { get; set; }
+        public string Url { get; set; }
+    }
+
 }
 
-public class UpdateUser
-{
-    public string Id { get; set; }
-    public string Url { get; set; }
-}
-[NotMapped]
-public class UserSignUp
-{
-    [Key]
-    public string Id { get; set; }
-    [DisplayName("EMAIL")]
-    public string Email { get; set; }
-    [DisplayName("PASSWORD")]
-    public string Password { get; set; }
-    [DisplayName("FIRST NAME")]
-    public string Firstname { get; set; }
-    [DisplayName("LAST NAME")]
-    public string Lastname { get; set; }
-    [DisplayName("PHONE NUMBER")]
-    public string PhoneNumber { get; set; }
-    
-    public string UserType { get; set; }
-    public string Url { get; set; }
-}

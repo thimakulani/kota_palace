@@ -26,6 +26,8 @@ namespace Kota_Palace_Admin.Data
         public DbSet<OrderItems> OrderItems { get; set; }
         public DbSet<AppUsers> AppUsers { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<UserInformation> UserInformation { get; set; }
         //public DbSet<Kota_Palace_Admin.Controllers.ApplicationViewModel> ApplicationViewModel { get; set; }
 
     }

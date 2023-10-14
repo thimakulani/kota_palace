@@ -3,6 +3,7 @@ using Kota_Palace_Admin.Hubs;
 using Kota_Palace_Admin.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
 var builder = WebApplication.CreateBuilder(args);
@@ -53,10 +54,41 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/";
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularOrigins",
+    builder =>
+    {
+        builder.WithOrigins(
+                            "http://localhost:4200"
+                            )
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
+app.UseCors("AllowAngularOrigins");
+using (var h = app.Services.CreateScope())
+{
+    //InitializeRoles(h.ServiceProvider);
+    var roleManager = h.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles = { "Admin", "Customer", "Employee", "Owner" };
+    foreach (var roleName in roles)
+    {
+        // Check if the role already exists
+        var roleExists = await roleManager.RoleExistsAsync(roleName);
+
+        if (!roleExists)
+        {
+            var role = new IdentityRole(roleName);
+            await roleManager.CreateAsync(role);
+        }
+    }
+}
+
 
 // Configure the HTTP request pipeline.
+//await InitializeRoles(app.Services);
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -76,3 +108,4 @@ app.MapControllerRoute(
     pattern: "{controller=Landing}/{action=Index}/{id?}");
 
 app.Run();
+

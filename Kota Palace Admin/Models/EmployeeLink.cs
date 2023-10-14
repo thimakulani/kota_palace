@@ -10,10 +10,10 @@ namespace Kota_Palace_Admin.Models
         public int Id { get; set; }
         [ForeignKey(nameof(AppUsers))]
         public string EmployeeId { get; set; }
-        public AppUsers Employee { get; set; }
-        [ForeignKey(nameof(Business))]
-        public string BusinessId { get; set; }
-        public Business Business { get; set; }
+        public virtual AppUsers Employee { get; set; }
+        [ForeignKey(nameof(Models.Business))]
+        public int BusinessId { get; set; }
+        public virtual Business Business { get; set; }
         public string Status { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace Kota_Palace_Admin.Controllers
         public ActionResult<Cart> GetCart(string id)
         {
             var cart = _context.Cart.Where(x => x.Customer_Id == id).ToList();
-            if (cart.Any())
+            if (!cart.Any())
             {
                 return NotFound();
             }

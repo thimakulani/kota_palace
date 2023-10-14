@@ -38,11 +38,10 @@ namespace Kota_Palace_Admin.Controllers
             {
                 var app_users = new AppUsers()
                 {
-                    Firstname = userSignUp.Firstname,
-                    Lastname = userSignUp.Lastname,
+                    
                     PhoneNumber = userSignUp.PhoneNumber,
                     UserName = userSignUp.Email,
-                    UserType = "ADMIN",
+                    
                 };
                 var results = await manager.CreateAsync(app_users, userSignUp.Password);
 

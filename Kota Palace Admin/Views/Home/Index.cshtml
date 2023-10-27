@@ -1,8 +1,49 @@
-﻿@{
+﻿@using Kota_Palace_Admin.Controllers;
+@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">TOTAL USERS</h5>
+                <p class="card-text">@Model.UsersCount</p>
+               @*  <a href="#" class="btn btn-primary">Go somewhere</a> *@
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">ACTIVE BUSINESS</h5>
+                <p class="card-text">@Model.ActiveBusinessCount</p>
+               @*  <a href="#" class="btn btn-primary">Go somewhere</a> *@
+            </div>
+        </div>
+    </div>
+
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">IN-ACTIVE BUSINESS</h5>
+                <p class="card-text">@Model.PendingBusinessCount</p>
+                @* <a href="#" class="btn btn-primary">Go somewhere</a> *@
+            </div>
+        </div>
+    </div>
+   @*  <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div> *@
+
 </div>

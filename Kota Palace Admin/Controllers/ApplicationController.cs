@@ -85,7 +85,9 @@ namespace Kota_Palace_Admin.Controllers
                     {
                         var user_data = await signInManager.UserManager.FindByEmailAsync(applicationViewModel.AppUsers.Email);
                         business.OwnerId = user_data.Id;
+                        await manager.AddToRoleAsync(user_data, "Owner");
                         AddBusiness(business);
+                        return RedirectToAction("Welcome", "Application");
                     }
                     else
                     {
@@ -99,6 +101,7 @@ namespace Kota_Palace_Admin.Controllers
                 {
                     business.OwnerId = _user.Id;
                     AddBusiness(business);
+                    return RedirectToAction("Welcome", "Application");
                 }
             }
 
@@ -135,6 +138,10 @@ namespace Kota_Palace_Admin.Controllers
         public ActionResult Edit(int id)
         {
             return View(id);
+        }
+        public ActionResult Welcome()
+        {
+            return View();
         }
 
         // POST: ApplicationController/Edit/5

@@ -8,9 +8,7 @@ namespace Kota_Palace_Admin.Hubs
     {
         public void NotifyApp(Order order)
         {
-
             Clients.All.SendAsync("Order", order);
-
         }
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -59,6 +59,8 @@
 		<PackageReference Include="bootstrap" Version="5.3.1" />
 		<PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
 		<PackageReference Include="Google.Apis.Firebasestorage.v1beta" Version="1.62.0.3158" />
+		<PackageReference Include="Google.Cloud.Firestore" Version="3.4.0" />
+		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.2" />
 		<PackageReference Include="NETCore.MailKit" Version="2.1.0" />
 		<PackageReference Include="Npgsql" Version="7.0.4" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
@@ -125,6 +127,12 @@
 	  <None Include="wwwroot\lib\jquery\dist\jquery.js" />
 	  <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
 	  <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="wwwroot\account_service.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

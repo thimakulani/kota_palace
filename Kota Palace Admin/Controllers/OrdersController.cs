@@ -18,10 +18,12 @@ namespace Kota_Palace_Admin.Controllers
     {
         private readonly AppDBContext _context;
         private IHubContext<OrderHub> hubContext;
-        public OrdersController(AppDBContext context, IHubContext<OrderHub> hubContext)
+        private IWebHostEnvironment webHostEnvironment;
+        public OrdersController(AppDBContext context, IHubContext<OrderHub> hubContext, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             this.hubContext = hubContext;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/Orders
@@ -32,10 +34,10 @@ namespace Kota_Palace_Admin.Controllers
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Order>> GetOrder(int id)
+        [HttpGet("{business_id}")]
+        public ActionResult<IEnumerable<Order>> GetOrder(int business_id)
         {
-            var order = _context.Order.Where(x => x.BusinessId == id).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.BusinessId == business_id).Include(x => x.OrderItems).Include(x=>x.Customer);
 
             if (order == null)
             {
@@ -48,7 +50,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("single/{id}")]
         public ActionResult<Order> GetSingleOrder(int id)
         {
-            var order = _context.Order.Where(x => x.Id == id).Include(x => x.OrderItems).FirstOrDefault();
+            var order = _context.Order.Where(x => x.Id == id).Include(x => x.OrderItems).Include(x => x.Customer).FirstOrDefault();
 
             if (order == null)
             {
@@ -63,7 +65,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("customer/{id}")]
         public ActionResult<IEnumerable<Order>> GetCustomerOrder(string id)
         {
-            var order = _context.Order.Where(x => x.Customer_Id == id).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.CustomerId == id).Include(x => x.OrderItems);
             //var order = await _context.Order.FindAsync(id);
 
             if (order == null)
@@ -117,7 +119,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("customer/completed/{id}")]
         public ActionResult<IEnumerable<Order>> GetCompletedCustomerOrders(string id)
         {
-            var order = _context.Order.Where(x => x.Status == "Ready" && x.Customer_Id == id).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.Status == "Ready" && x.CustomerId == id).Include(x => x.OrderItems);
 
             if (order == null)
             {
@@ -134,7 +136,7 @@ namespace Kota_Palace_Admin.Controllers
         {
             if (id != order.Id)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             _context.Entry(order).State = EntityState.Modified;
@@ -248,7 +250,7 @@ namespace Kota_Palace_Admin.Controllers
             {
                 await _context.SaveChangesAsync();
                 //_context.Order.Remove(order);
-                var data = _context.Cart.Where(x => x.Customer_Id == order.Customer_Id).ToList();
+                var data = _context.Cart.Where(x => x.Customer_Id == order.CustomerId).ToList();
                 _context.RemoveRange(data);
                 _context.SaveChanges();
             }
@@ -257,6 +259,14 @@ namespace Kota_Palace_Admin.Controllers
                 return NotFound(ex.Message);
             }
             await hubContext.Clients.All.SendAsync("Order", order);
+            Dictionary<string, object> _kv = new()
+            {
+                { "order_id", order.Id },
+                { "business_id", order.BusinessId }
+            };
+            await FirestoreInstance.GetInstance(webHostEnvironment)
+                .Collection("Order")
+                .AddAsync(_kv);
             return Ok("Order has been placed!!!");
         }
 

@@ -8,7 +8,8 @@ namespace Kota_Palace_Admin.Models
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [ForeignKey(nameof(AppUsers))]
-        public string Customer_Id { get; set; }
+        public string CustomerId { get; set; }
+        public virtual AppUsers Customer { get; set; }
         public string Status { get; set; }
         [ForeignKey(nameof(Business))]
         public int BusinessId { get; set; }
@@ -19,6 +20,6 @@ namespace Kota_Palace_Admin.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string DriverId { get; set; }
-
+        public int IsDeleted { get; set; } = 0;
     }
 }

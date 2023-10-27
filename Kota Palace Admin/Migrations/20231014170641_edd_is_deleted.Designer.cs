@@ -3,6 +3,7 @@ using System;
 using Kota_Palace_Admin.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Kota_Palace_Admin.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231014170641_edd_is_deleted")]
+    partial class edd_is_deleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,7 +192,7 @@ namespace Kota_Palace_Admin.Migrations
                     b.Property<int>("BusinessId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("Customer_Id")
                         .HasColumnType("text");
 
                     b.Property<string>("DriverId")
@@ -214,8 +217,6 @@ namespace Kota_Palace_Admin.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("Order");
                 });
@@ -534,15 +535,6 @@ namespace Kota_Palace_Admin.Migrations
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Kota_Palace_Admin.Models.Order", b =>
-                {
-                    b.HasOne("Kota_Palace_Admin.Models.AppUsers", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Kota_Palace_Admin.Models.OrderItems", b =>

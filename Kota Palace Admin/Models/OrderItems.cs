@@ -11,6 +11,7 @@ namespace Kota_Palace_Admin.Models
         public string ItemName { set; get; }
         public decimal Price { get; set; }
         public string Extras { get; set; }
+        public int IsDeleted { get; set; } = 0;
     }
 
 

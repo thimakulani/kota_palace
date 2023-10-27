@@ -18,6 +18,7 @@ namespace Kota_Palace_Admin.Models
         [ForeignKey(nameof(Business))]
         public int BusinessId { get; set; }
         public ICollection<Extras> Extras { get; set; } //
+        public int IsDeleted { get; set; } = 0;
     }
 
     public class Extras
@@ -25,5 +26,6 @@ namespace Kota_Palace_Admin.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public int MenuId { get; set; }
+        public int IsDeleted { get; set; } = 0;
     }
 }

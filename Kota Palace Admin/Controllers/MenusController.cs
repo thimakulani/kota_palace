@@ -44,7 +44,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("all/{id}")]
         public ActionResult<ICollection<Menu>> GetAllMenu(int id)
         {
-            var menu = _context.Menu.Where(x => x.BusinessId == id).Include("Extras").ToList();
+            var menu = _context.Menu.Where(x => x.BusinessId == id && x.IsDeleted != 1).Include("Extras").ToList();
 
             if (menu == null)
             {
@@ -90,8 +90,8 @@ namespace Kota_Palace_Admin.Controllers
             {
                 return NotFound();
             }
-
-            _context.Menu.Remove(menu);
+            menu.IsDeleted = 1;
+            _context.Menu.Update(menu);
             await _context.SaveChangesAsync();
 
             return NoContent();

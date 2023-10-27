@@ -22,7 +22,7 @@ namespace Kota_Palace_Admin.Models
 
         //cart extras
         public string Extras { get; set; }
-
+        public int IsDeleted { get; set; } = 0;
 
     }
 

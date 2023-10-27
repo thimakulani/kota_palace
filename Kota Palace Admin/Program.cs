@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDBContext>(options =>
         builder.Configuration.GetConnectionString("conn_string")
         ));
 
+
 // Add services to the container.
 builder
     .Services
@@ -71,6 +72,7 @@ app.UseCors("AllowAngularOrigins");
 using (var h = app.Services.CreateScope())
 {
     //InitializeRoles(h.ServiceProvider);
+    var manager = h.ServiceProvider.GetRequiredService<UserManager<AppUsers>>();
     var roleManager = h.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     string[] roles = { "Admin", "Customer", "Employee", "Owner" };
     foreach (var roleName in roles)
@@ -84,6 +86,25 @@ using (var h = app.Services.CreateScope())
             await roleManager.CreateAsync(role);
         }
     }
+    AppUsers user = new AppUsers()
+    {
+        UserName = "admin@admin.com",
+        Email = "admin@admin.com",
+        Firstname = "Admin",
+        Lastname = "Admin",
+        PhoneNumber = "0713934923",
+    };
+
+    var _user = await manager.FindByEmailAsync(user.Email);
+   if(_user == null)
+    {
+        var results = await manager.CreateAsync(user, "123456789");
+        if (results.Succeeded)
+        {
+            _user = await manager.FindByEmailAsync(user.Email);
+            await manager.AddToRoleAsync(_user, "Admin");
+        }
+    }
 }
 
 
@@ -95,7 +116,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapHub<OrderHub>("/OrderHub");

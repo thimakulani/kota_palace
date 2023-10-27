@@ -27,7 +27,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Business>>> GetBusiness()
         {
-            return await _context.Business.ToListAsync();
+            return await _context.Business.Where(x=>x.Status == "Active").ToListAsync();
         }
 
         // GET: api/Businesses/5
@@ -87,6 +87,30 @@ namespace Kota_Palace_Admin.Controllers
 
             return NoContent();
         }
+
+
+        [HttpGet("online/{id}")]
+        public async Task<IActionResult> UpdateOnline(int id) 
+        {
+            var busness = await _context.Business.FindAsync(id);
+            if(busness!=null)
+            {
+                if(busness.Online == "ONLINE")
+                {
+                    busness.Online = "OFFLINE";
+                }
+                else
+                {
+                    busness.Online = "ONLINE";
+                }
+                _context.Business.Update(busness);
+                _context.SaveChanges();
+                return Ok(busness);
+            }
+            return NotFound("Something went wrong");
+        }
+
+
 
         // PUT: api/Businesses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

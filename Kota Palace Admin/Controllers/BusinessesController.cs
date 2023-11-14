@@ -62,6 +62,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBusiness(int id, Business business)
         {
+            business.Id = id;
             if (id != business.Id)
             {
                 return BadRequest();
@@ -85,7 +86,7 @@ namespace Kota_Palace_Admin.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("Successfully Updated");
         }
 
 
@@ -126,28 +127,7 @@ namespace Kota_Palace_Admin.Controllers
             }
             return BadRequest("Something went wrong adding address");
         }
-        [HttpGet("test")]
-        public ActionResult<ApplicationViewModel> Test()
-        {
-            UserSignUp userSignUp = new()
-            {
-                Email = "",
-                Firstname = "",
-                Lastname = "",
-                Id = "",
-                Password = "",
-                PhoneNumber = ""
-            };
-            Business business = new()
-            {
-                Name = "",
-                PhoneNumber = "",
-                Description = "",
-
-            };
-            return Ok(new ApplicationViewModel() { AppUsers = userSignUp, Business = business });
-        }
-
+       
         // POST: api/Businesses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("register")]
@@ -221,7 +201,7 @@ namespace Kota_Palace_Admin.Controllers
             var bus_menu = new BusinessMenuViewModel()
             {
                 Business = _context.Business.Find(id),
-                Menu = _context.Menu.Where(x => x.BusinessId == id).Include("Extras").ToList(),
+                Menu = _context.Menu.Where(x => x.BusinessId == id && x.IsDeleted !=1).Include("Extras").ToList(),
             };
             return bus_menu;
         }

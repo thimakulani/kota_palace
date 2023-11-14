@@ -121,6 +121,7 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapHub<OrderHub>("/OrderHub");
+//app.MapHub<TrackOrderHub>("/TrackOrderHub");
 app.UseRouting();
 
 app.UseAuthorization();

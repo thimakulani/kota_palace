@@ -37,7 +37,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("{business_id}")]
         public ActionResult<IEnumerable<Order>> GetOrder(int business_id)
         {
-            var order = _context.Order.Where(x => x.BusinessId == business_id).Include(x => x.OrderItems).Include(x=>x.Customer);
+            var order = _context.Order.Where(x => x.BusinessId == business_id && x.Status == "Pending").Include(x => x.OrderItems).Include(x=>x.Customer);
 
             if (order == null)
             {
@@ -65,7 +65,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("customer/{id}")]
         public ActionResult<IEnumerable<Order>> GetCustomerOrder(string id)
         {
-            var order = _context.Order.Where(x => x.CustomerId == id).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.CustomerId == id && x.Status == "Pending" || x.Status == "Accepted").Include(x => x.OrderItems);
             //var order = await _context.Order.FindAsync(id);
 
             if (order == null)
@@ -86,18 +86,7 @@ namespace Kota_Palace_Admin.Controllers
                 return NotFound();
             }
 
-            if (order.Status == "Pending")
-            {
-                order.Status = "Pending";
-            }
-            else if (order.Status == "Accepted")
-            {
-                order.Status = "Accepted";
-            }
-            else
-            {
-                order.Status = "Ready";
-            }
+   
             return Ok(order);
         }
 
@@ -105,7 +94,19 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("completed/{id}")]
         public ActionResult<IEnumerable<Order>> GetCompletedOrder(int id)
         {
-            var order = _context.Order.Where(x => x.Status == "Ready" && x.BusinessId == id).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.Status == "Complete" && x.BusinessId == id).Include(x=>x.Customer).Include(x => x.OrderItems);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
+        [HttpGet("prepare/{id}")]
+        public ActionResult<IEnumerable<Order>> GetPreparedOrder(int id) 
+        {
+            var order = _context.Order.Where(x => x.Status == "Accepted" && x.BusinessId == id).Include(x=>x.Customer).Include(x => x.OrderItems);
 
             if (order == null)
             {
@@ -119,7 +120,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("customer/completed/{id}")]
         public ActionResult<IEnumerable<Order>> GetCompletedCustomerOrders(string id)
         {
-            var order = _context.Order.Where(x => x.Status == "Ready" && x.CustomerId == id).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.Status == "Complete" && x.CustomerId == id).Include(x => x.OrderItems);
 
             if (order == null)
             {
@@ -161,7 +162,7 @@ namespace Kota_Palace_Admin.Controllers
         }
 
         //update order status to in-progress
-        [HttpPut("process/{id}")]
+        [HttpPut("update_status/{id}")]
         public async Task<IActionResult> PutProcessOrder(int id, Order order)
         {
 
@@ -170,27 +171,53 @@ namespace Kota_Palace_Admin.Controllers
                 return BadRequest();
             }
 
-            var processOrder = _context.Order.Find(order.Id);
+            var processOrder = await _context.Order.FindAsync(order.Id);
+
             if (processOrder == null)
             {
                 return NotFound("Order not found");
             }
+
             if (processOrder.Status == "Pending")
             {
                 processOrder.Status = "Accepted";
             }
             else if (processOrder.Status == "Accepted")
             {
-                processOrder.Status = "Ready";
+                processOrder.Status = "Completed";
             }
-            _context.Order.Attach(processOrder);
-            var update = _context.Entry(processOrder);
-            update.Property(x => x.Status).IsModified = true;
-
             await _context.SaveChangesAsync();
-
+            //var _order = _context.Order.Where(x => x.Id == order.Id).Include(x=>x.Customer).Include(x => x.OrderItems).FirstOrDefault();
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(processOrder); // Serialize the updated processOrder
+            await hubContext.Clients.All.SendAsync(processOrder.CustomerId, json);
+            AppLogs appLogs = new()
+            {
+                Message = processOrder.CustomerId
+            };
+            _context.AppLogs.Add(appLogs);
+            _context.SaveChanges();
+            Console.WriteLine(json);
             return Ok(processOrder.Status);
+
         }
+        [HttpGet("test")]
+        public async Task<ActionResult> Test(string id )
+        {
+
+            // Update records in the database
+            var orders = _context.Order.Where(x => x.Status == "Accepted").ToList();
+            for (int i = 0; i < orders.Count; i++)
+            {
+                orders[i].Status = "Pending";
+            }
+            _context.Order.UpdateRange(orders);
+            _context.SaveChanges();
+
+            await hubContext.Clients.All.SendAsync(id, "data");
+            return Ok();
+
+        }
+
 
         //update order status to in-progress
         [HttpPut("complete/{id}")]
@@ -258,15 +285,10 @@ namespace Kota_Palace_Admin.Controllers
             {
                 return NotFound(ex.Message);
             }
-            await hubContext.Clients.All.SendAsync("Order", order);
-            Dictionary<string, object> _kv = new()
-            {
-                { "order_id", order.Id },
-                { "business_id", order.BusinessId }
-            };
-            await FirestoreInstance.GetInstance(webHostEnvironment)
-                .Collection("Order")
-                .AddAsync(_kv);
+            order.Customer = _context.AppUsers.Find(order.CustomerId);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(order);
+            await hubContext.Clients.All.SendAsync(order.BusinessId.ToString(), json);
+            
             return Ok("Order has been placed!!!");
         }
 

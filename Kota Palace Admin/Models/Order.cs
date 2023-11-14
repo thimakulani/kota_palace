@@ -21,5 +21,6 @@ namespace Kota_Palace_Admin.Models
         public double Longitude { get; set; }
         public string DriverId { get; set; }
         public int IsDeleted { get; set; } = 0;
+        public int Collected { get; set; } = 0; 
     }
 }

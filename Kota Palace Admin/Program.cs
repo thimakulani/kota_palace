@@ -11,9 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("conn_string")
-        ));
+{
+    options.EnableDetailedErrors(true);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("conn_string"), optn =>
+        {
+            optn.EnableRetryOnFailure();
+        });
+});
 
 
 // Add services to the container.
@@ -96,7 +100,7 @@ using (var h = app.Services.CreateScope())
     };
 
     var _user = await manager.FindByEmailAsync(user.Email);
-   if(_user == null)
+    if (_user == null)
     {
         var results = await manager.CreateAsync(user, "123456789");
         if (results.Succeeded)

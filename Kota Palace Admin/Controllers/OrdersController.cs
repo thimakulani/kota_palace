@@ -9,6 +9,7 @@ using Kota_Palace_Admin.Models;
 using Kota_Palace_Admin.Data;
 using Microsoft.AspNetCore.SignalR;
 using Kota_Palace_Admin.Hubs;
+using FirebaseAdmin.Messaging;
 
 namespace Kota_Palace_Admin.Controllers
 {
@@ -37,7 +38,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("{business_id}")]
         public ActionResult<IEnumerable<Order>> GetOrder(int business_id)
         {
-            var order = _context.Order.Where(x => x.BusinessId == business_id && x.Status == "Pending").Include(x => x.OrderItems).Include(x=>x.Customer);
+            var order = _context.Order.Where(x => x.BusinessId == business_id && x.Status == "Pending").Include(x => x.OrderItems).Include(x => x.Customer);
 
             if (order == null)
             {
@@ -86,7 +87,7 @@ namespace Kota_Palace_Admin.Controllers
                 return NotFound();
             }
 
-   
+
             return Ok(order);
         }
 
@@ -94,7 +95,7 @@ namespace Kota_Palace_Admin.Controllers
         [HttpGet("completed/{id}")]
         public ActionResult<IEnumerable<Order>> GetCompletedOrder(int id)
         {
-            var order = _context.Order.Where(x => x.Status == "Complete" && x.BusinessId == id).Include(x=>x.Customer).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.Status == "Complete" && x.BusinessId == id).Include(x => x.Customer).Include(x => x.OrderItems);
 
             if (order == null)
             {
@@ -104,9 +105,9 @@ namespace Kota_Palace_Admin.Controllers
             return Ok(order);
         }
         [HttpGet("prepare/{id}")]
-        public ActionResult<IEnumerable<Order>> GetPreparedOrder(int id) 
+        public ActionResult<IEnumerable<Order>> GetPreparedOrder(int id)
         {
-            var order = _context.Order.Where(x => x.Status == "Accepted" && x.BusinessId == id).Include(x=>x.Customer).Include(x => x.OrderItems);
+            var order = _context.Order.Where(x => x.Status == "Accepted" && x.BusinessId == id).Include(x => x.Customer).Include(x => x.OrderItems);
 
             if (order == null)
             {
@@ -190,6 +191,19 @@ namespace Kota_Palace_Admin.Controllers
             //var _order = _context.Order.Where(x => x.Id == order.Id).Include(x=>x.Customer).Include(x => x.OrderItems).FirstOrDefault();
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(processOrder); // Serialize the updated processOrder
             await hubContext.Clients.All.SendAsync(processOrder.CustomerId, json);
+            var fb_admin = FirestoreInstance
+                .GetFirebaseMessaging(webHostEnvironment);
+            Message message = new()
+            {
+                Topic = $"{processOrder.CustomerId}",
+                Notification = new Notification()
+                {
+                    Title = "ORDER UPDATE",
+                    Body = $"Your order status has been changed to: {processOrder.Status}"
+                },
+            };
+            await fb_admin.SendAsync(message);
+
             AppLogs appLogs = new()
             {
                 Message = processOrder.CustomerId
@@ -201,16 +215,17 @@ namespace Kota_Palace_Admin.Controllers
 
         }
         [HttpGet("test")]
-        public async Task<ActionResult> Test(string id )
+        public async Task<ActionResult> Test(string id)
         {
 
             // Update records in the database
-            var orders = _context.Order.Where(x => x.Status == "Accepted").ToList();
+            /*var orders = _context.Order.Where(x => x.Status == "Accepted").ToList();
             for (int i = 0; i < orders.Count; i++)
             {
                 orders[i].Status = "Pending";
-            }
-            _context.Order.UpdateRange(orders);
+            }*/
+            var list = _context.Order.Include(x => x.OrderItems);
+            _context.RemoveRange(list);
             _context.SaveChanges();
 
             await hubContext.Clients.All.SendAsync(id, "data");
@@ -288,7 +303,7 @@ namespace Kota_Palace_Admin.Controllers
             order.Customer = _context.AppUsers.Find(order.CustomerId);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(order);
             await hubContext.Clients.All.SendAsync(order.BusinessId.ToString(), json);
-            
+
             return Ok("Order has been placed!!!");
         }
 
